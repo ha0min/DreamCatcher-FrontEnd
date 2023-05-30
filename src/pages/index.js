@@ -13,7 +13,7 @@ export default function Home() {
         console.log('assignment id:', uuid);
 
         // redirect to /user/[uuid]
-
+        window.location.href = `/dream/${uuid}`;
     }
 
 
@@ -26,6 +26,7 @@ export default function Home() {
                     display: "flex",
                     justifyContent: "center", /* 水平居中 */
                     alignItems: "center", /* 垂直居中 */
+                    flexDirection: "column",
                     height: "100%",
                 }}
             >
