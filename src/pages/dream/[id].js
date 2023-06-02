@@ -4,16 +4,14 @@ import {
     ProCard,
     ProFormText,
     StepsForm,
-    ProFrom,
-    ProFormCheckbox,
-    ProFormSelect,
-    ProFormDigit,
     ProFormDateRangePicker, CheckCard, ProFormItem, ProFormGroup, ProFormList, ProFormTextArea
 } from "@ant-design/pro-components";
 import {Input, Spin, Typography} from "antd";
 import {useRef, useState} from "react";
 import {useDreamForm} from "@/utils/http";
 import {wait} from "next/dist/build/output/log";
+import {motion, useIsPresent} from "framer-motion";
+import Link from "next/link";
 
 const EmojiCard = ({emoji, description, value}) => {
     return (
@@ -43,36 +41,43 @@ const Dream = () => {
 
     const {isMutating, error, data, reset, dreamFormTrigger} = useDreamForm();
     const [isLoading, setIsLoading] = useState(false);
+    const isPresent = useIsPresent();
+
 
     const onFormFinish = async (formData) => {
         formData.dream_id = id;
         console.log('post data: ', formData);
-        // setIsLoading(true);
-        // const timer = setTimeout(() => {
-        //     setIsLoading(false);
-        // }, 5000);
+        setIsLoading(true);
 
-        // await dreamFormTrigger({formData})
-        //     .then((res) => {
-        //         setIsLoading(true);
-        //         console.log(res);
-        //         wait(5000);
-        //         setIsLoading(false);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     })
+        await dreamFormTrigger({formData})
+            .then((res) => {
+                console.log(res);
+                setIsLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     }
 
     return (
-        <PageContainerWrapper title={"Dream"}>
+        <div>
 
-            <Spin spinning={isLoading} size='large' tip={'building your dream...'}>
-                <DreamForm onFormFinish={onFormFinish}/>
-            </Spin>
+            <PageContainerWrapper title={"Dream"}>
 
+                <Spin spinning={isLoading} size='large' tip={'building your dream...'}>
+                    <DreamForm onFormFinish={onFormFinish}/>
+                </Spin>
+            </PageContainerWrapper>
 
-        </PageContainerWrapper>
+            <motion.div
+                initial={{ scaleX: 1 }}
+                animate={{ scaleX: 0, transition: { duration: 0.5, ease: "circOut" } }}
+                exit={{ scaleX: 1, transition: { duration: 0.5, ease: "circIn" } }}
+                style={{ originX: isPresent ? 0 : 1}}
+                className="privacy-screen"
+            />
+        </div>
+
     )
 }
 
@@ -158,6 +163,7 @@ const EmotionStepForm = () => {
         </ProCard>
     )
 }
+
 
 const TopicStepForm = () => {
     return (
