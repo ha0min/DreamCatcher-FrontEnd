@@ -10,8 +10,10 @@ import {
     ProFormDigit,
     ProFormDateRangePicker, CheckCard, ProFormItem, ProFormGroup, ProFormList, ProFormTextArea
 } from "@ant-design/pro-components";
-import {Input, Typography} from "antd";
+import {Input, Spin, Typography} from "antd";
 import {useRef, useState} from "react";
+import {useDreamForm} from "@/utils/http";
+import {wait} from "next/dist/build/output/log";
 
 const EmojiCard = ({emoji, description, value}) => {
     return (
@@ -39,21 +41,39 @@ const Dream = () => {
     const {id} = router.query;
     console.log('dream id: ', id);
 
+    const {isMutating, error, data, reset, dreamFormTrigger} = useDreamForm();
+    const [isLoading, setIsLoading] = useState(false);
+
+    const onFormFinish = async (formData) => {
+        formData.dream_id = id;
+        console.log('post data: ', formData);
+        // setIsLoading(true);
+        // const timer = setTimeout(() => {
+        //     setIsLoading(false);
+        // }, 5000);
+
+        // await dreamFormTrigger({formData})
+        //     .then((res) => {
+        //         setIsLoading(true);
+        //         console.log(res);
+        //         wait(5000);
+        //         setIsLoading(false);
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     })
+    }
+
     return (
         <PageContainerWrapper title={"Dream"}>
-            <div>
-                <Form/>
-            </div>
+
+            <Spin spinning={isLoading} size='large' tip={'building your dream...'}>
+                <DreamForm onFormFinish={onFormFinish}/>
+            </Spin>
+
+
         </PageContainerWrapper>
     )
-}
-
-const StepsRender = (steps, dom) => {
-    if (steps === 0) {
-        return <Typography.Title level={1}>h1</Typography.Title>
-    } else {
-        return <div>test</div>
-    }
 }
 
 const EmotionStepForm = () => {
@@ -91,6 +111,8 @@ const EmotionStepForm = () => {
                     <EmojiCard description={"Anxious"} emoji={"😰"} value={"Anxious"}/>
                     <EmojiCard description={"Enthusiastic"} emoji={"😃"} value={"Enthusiastic"}/>
                     <EmojiCard description={"Surprised"} emoji={"😮"} value={"Surprised"}/>
+                    <EmojiCard description={"Delicious"} emoji={"🤤"} value={"Delicious"}/>
+                    <EmojiCard description={"Arousing"} emoji={"🥵"} value={"Arousing"}/>
                     <EmojiCard description={"Tranquil"} emoji={"😌"} value={"Tranquil"}/>
                     <EmojiCard description={"Disgusted"} emoji={"🤢"} value={"Disgusted"}/>
                     <EmojiCard description={"Intrigued"} emoji={"🤔"} value={"Intrigued"}/>
@@ -103,6 +125,7 @@ const EmotionStepForm = () => {
                     <EmojiCard description={"Lonely"} emoji={"😔"} value={"Lonely"}/>
                     <EmojiCard description={"Nostalgic"} emoji={"🥰"} value={"Nostalgic"}/>
                     <EmojiCard description={"Overwhelmed"} emoji={"😵"} value={"Overwhelmed"}/>
+
                     <CheckCard
                         title={
                             <div
@@ -206,27 +229,31 @@ const EventStepForm = () => {
             }
         >
             <ProFormList
-                name="events"
+                name="fragments"
                 label={
                     <Typography.Title level={3}>
-                        So, what happened in your dream?
+                        So, what can you recall?
                     </Typography.Title>
                 }
                 creatorButtonProps={{
-                    creatorButtonText: "Add a new event in your dream"
+                    creatorButtonText: "Add a new fragment of your dream"
                 }}
                 copyIconProps={{
-                    tooltipText: 'copy this event',
+                    tooltipText: 'copy this Fragment',
                 }}
                 deleteIconProps={{
-                    tooltipText: 'delete this event',
+                    tooltipText: 'delete this Fragment',
                 }}
                 itemRender={({listDom, action}, {record}) => {
                     return (
                         <ProCard
                             bordered
                             extra={action}
-                            // title={'Event ' + record?.index}
+                            title={
+                                <Typography.Title level={4}>
+                                    Fragment
+                                </Typography.Title>
+                            }
                             style={{
                                 marginBlockEnd: 8,
                             }}
@@ -236,12 +263,12 @@ const EventStepForm = () => {
                     );
                 }}
             >
-                <Typography.Title level={4}>
-                    The topic of the event
+                <Typography.Title level={5}>
+                    What is the setting of this fragment?
                 </Typography.Title>
 
                 <ProFormItem
-                    name="topic"
+                    name="setting"
                     style={{width: '100%'}}
                 >
                     <CheckCard.Group>
@@ -249,7 +276,9 @@ const EventStepForm = () => {
                         <EmojiCard description={"School"} emoji={"🏫"} value={"School"}/>
                         <EmojiCard description={"Office"} emoji={"💼"} value={"Work"}/>
                         <EmojiCard description={"Beach"} emoji={"🏖️"} value={"Beach"}/>
-                        <EmojiCard description={"Forest"} emoji={"🌳"} value={"Forest"}/>
+                        <EmojiCard description={"Garden"} emoji={"🌷"} value={"Garden"}/>
+                        <EmojiCard description={"Space"} emoji={"🌌"} value={"Space"}/>
+                        <EmojiCard description={"Mall"} emoji={"🛍"} value={"Mall"}/>
                         <EmojiCard description={"City"} emoji={"🏙️"} value={"City"}/>
                         <EmojiCard description={"Mountain"} emoji={"🏔️"} value={"Mountain"}/>
                         <EmojiCard description={"Desert"} emoji={"🏜️"} value={"Desert"}/>
@@ -281,25 +310,30 @@ const EventStepForm = () => {
                 </ProFormItem>
 
                 <ProFormList
-                    name="characters"
+                    name="events"
                     label={
-                        <Typography.Title level={4}>
-                            Who was involved in the event?
+                        <Typography.Title level={5}>
+                            Who was involved in this fragment?
                         </Typography.Title>
                     }
                     creatorButtonProps={{
-                        creatorButtonText: "Add a new character in the event"
+                        creatorButtonText: "Add a new character in this fragment"
                     }}
                     copyIconProps={{
-                        tooltipText: 'copy this character',
+                        tooltipText: 'Copy this character',
                     }}
                     deleteIconProps={{
-                        tooltipText: 'delete this character',
+                        tooltipText: 'Delete this character',
                     }}
                 >
                     <ProFormGroup key="group">
-                        <ProFormText name="character" label="Character" placeholder={'J'}/>
-                        <ProFormText name="relationship" label="relationship"/>
+                        <ProFormText name="character" label="Character" placeholder={'Jennie'}/>
+                        <ProFormText name="relationship" label="Relationship" placeholder={'My friend'}/>
+                        <ProFormText
+                            name="description"
+                            label="Description"
+                            placeholder={'We went to beach together and ate BBQ'}
+                        />
                     </ProFormGroup>
                 </ProFormList>
             </ProFormList>
@@ -307,19 +341,11 @@ const EventStepForm = () => {
     )
 }
 
-const Form = () => {
-    const onFinish = async (values) => {
-        console.log(values);
-
-    }
+const DreamForm = ({onFormFinish}) => {
     return (
         <>
             <StepsForm
-                onFinish={async (values) => {
-                    console.log(values);
-                    // await waitTime(1000);
-                    // message.success('Submit finished!');
-                }}
+                onFinish={onFormFinish}
                 formProps={{
                     validateMessages: {
                         required: 'These fields are required!',
