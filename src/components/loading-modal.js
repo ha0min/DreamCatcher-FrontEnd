@@ -1,13 +1,22 @@
 import {motion} from "framer-motion";
 import {Carousel, Typography} from "antd";
 
-export const LoadingModal = () => {
+export const LoadingModal = ({isModalShow}) => {
+    const itemVariants = {
+        open: {
+            opacity: 1,
+            y: 0,
+            transition: {type: "spring", stiffness: 300, damping: 24}
+        },
+        closed: {opacity: 0, y: 20, transition: {duration: 0.2}}
+    };
+
     return (
         <motion.div
             initial={false}
-            animate={showText ? "open" : "closed"}
+            animate={isModalShow ? "open" : "closed"}
         >
-            <div className="overlay" style={{display: showText ? "block" : "none"}}></div>
+            <div className="overlay" style={{display: isModalShow ? "block" : "none"}}></div>
 
             <motion.div
                 className="loading-box"
@@ -31,12 +40,12 @@ export const LoadingModal = () => {
                         }
                     }
                 }}
-                style={{pointerEvents: showText ? "auto" : "none"}}
+                style={{pointerEvents: isModalShow ? "auto" : "none"}}
             >
                 <motion.div variants={itemVariants}>
                     <Carousel dotPosition={"left"}
                               dots={false}
-                              autoplaySpeed={6000}
+                              autoplaySpeed={3500}
                               waitForAnimate={true}
                               autoplay={true}>
                         <div>

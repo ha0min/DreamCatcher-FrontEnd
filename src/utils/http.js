@@ -19,11 +19,11 @@ export const useDreamForm = () => {
 const sendFormRequest = async (url, args) => {
     console.log('sendFormRequest args:', args.arg)
     const formData = args.arg.formData
-    console.log('sendFormRequest dest:', url + formData?.id);
+    console.log('sendFormRequest dest:', url + formData?.dream_id);
     console.log('sendFormRequest form data:', formData)
     console.log('sendFormRequest form data:', JSON.stringify(formData))
 
-    return fetch(url + formData?.id, {
+    return fetch(url + formData?.dream_id, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

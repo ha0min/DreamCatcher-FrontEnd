@@ -6,33 +6,15 @@ import {
     StepsForm,
     ProFormDateRangePicker, CheckCard, ProFormItem, ProFormGroup, ProFormList, ProFormTextArea
 } from "@ant-design/pro-components";
-import {Input, Spin, Typography} from "antd";
+import {Col, Input, Row, Spin, Typography} from "antd";
 import {useRef, useState} from "react";
 import {useDreamForm} from "@/utils/http";
 import {wait} from "next/dist/build/output/log";
 import {motion, useIsPresent} from "framer-motion";
 import Link from "next/link";
+import {EmojiCard} from "@/components/common";
+import {LoadingModal} from "@/components/loading-modal";
 
-const EmojiCard = ({emoji, description, value}) => {
-    return (
-        <CheckCard
-            title={
-                <div
-                    style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        width: '100px',
-                        fontSize: '3em'
-                    }}
-                >
-                    {emoji}
-                </div>
-            }
-            description={<div style={{textAlign: 'center'}}>{description}</div>}
-            value={value}
-            style={{width: 120, height: 130, textAlign: 'center'}}
-        />
-    )
-}
 
 const Dream = () => {
     const router = useRouter();
@@ -47,12 +29,11 @@ const Dream = () => {
     const onFormFinish = async (formData) => {
         formData.dream_id = id;
         console.log('post data: ', formData);
-        setIsLoading(true);
 
         await dreamFormTrigger({formData})
             .then((res) => {
                 console.log(res);
-                setIsLoading(false);
+                router.push('/');
             })
             .catch((err) => {
                 console.log(err);
@@ -63,17 +44,14 @@ const Dream = () => {
         <div>
 
             <PageContainerWrapper title={"Dream"}>
-
-                <Spin spinning={isLoading} size='large' tip={'building your dream...'}>
-                    <DreamForm onFormFinish={onFormFinish}/>
-                </Spin>
+                <DreamForm onFormFinish={onFormFinish}/>
             </PageContainerWrapper>
-
+            <LoadingModal isModalShow={isMutating}/>
             <motion.div
-                initial={{ scaleX: 1 }}
-                animate={{ scaleX: 0, transition: { duration: 0.5, ease: "circOut" } }}
-                exit={{ scaleX: 1, transition: { duration: 0.5, ease: "circIn" } }}
-                style={{ originX: isPresent ? 0 : 1}}
+                initial={{scaleX: 1}}
+                animate={{scaleX: 0, transition: {duration: 0.5, ease: "circOut"}}}
+                exit={{scaleX: 1, transition: {duration: 0.5, ease: "circIn"}}}
+                style={{originX: isPresent ? 0 : 1}}
                 className="privacy-screen"
             />
         </div>
@@ -104,7 +82,7 @@ const EmotionStepForm = () => {
         >
             <ProFormItem
                 name="dream-emotion"
-                required={true}
+                rules={[{required: true}]}
             >
                 <CheckCard.Group>
                     <EmojiCard description={"Sad"} emoji={"😭"} value={"Sad"}/>
@@ -187,7 +165,7 @@ const TopicStepForm = () => {
             <ProFormItem
                 name="checkbox-group"
             >
-                <CheckCard.Group>
+                <CheckCard.Group rules={[{required: true}]}>
                     <EmojiCard description={"Sad"} emoji={"😭"} value={"Sad"}/>
                     <EmojiCard description={"Fear"} emoji={"😱"} value={"Fear"}/>
                     <EmojiCard description={"Neutral"} emoji={"😐"} value={"Neutral"}/>
@@ -276,6 +254,7 @@ const EventStepForm = () => {
                 <ProFormItem
                     name="setting"
                     style={{width: '100%'}}
+                    rules={[{required: true}]}
                 >
                     <CheckCard.Group>
                         <EmojiCard description={"Home"} emoji={"🏠"} value={"Home"}/>
@@ -333,12 +312,15 @@ const EventStepForm = () => {
                     }}
                 >
                     <ProFormGroup key="group">
-                        <ProFormText name="character" label="Character" placeholder={'Jennie'}/>
+                        <ProFormText width={"xs"} name="character" label="Character" placeholder={'Jennie'}
+                                     rules={[{required: true}]}/>
                         <ProFormText name="relationship" label="Relationship" placeholder={'My friend'}/>
                         <ProFormText
+                            width={"md"}
                             name="description"
                             label="Description"
-                            placeholder={'We went to beach together and ate BBQ'}
+                            placeholder={'went to beach with me'}
+                            rules={[{required: true}]}
                         />
                     </ProFormGroup>
                 </ProFormList>
