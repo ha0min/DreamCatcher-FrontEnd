@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*@tailwind base;*/
+/*@tailwind utilities;*/
 
 /*:root {*/
 /*  --foreground-rgb: 0, 0, 0;*/
@@ -15,6 +14,9 @@
 /*    --background-end-rgb: 0, 0, 0;*/
 /*  }*/
 /*}*/
+body{
+    margin: 0;
+}
 
 /*body {*/
 /*  color: rgb(var(--foreground-rgb));*/
@@ -78,4 +80,12 @@
     backdrop-filter: blur(3px);
     z-index: 1;
 }
+
+.gradient-text {
+    background: -webkit-linear-gradient(180deg, #0055ff 0%, rgb(0, 153, 255) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
 

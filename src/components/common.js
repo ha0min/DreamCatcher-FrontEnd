@@ -33,3 +33,16 @@ export const PrivacyScreen = ({isPresent}) => {
         />
     )
 }
+
+export const DelayPopupDiv = ({children, delay, ...props}) => {
+    return (
+        <motion.div
+            initial={{opacity: 0, y: 50}}
+            animate={{opacity: 1, y: 0, transition: {delay: delay, duration: 0.8}}}
+            exit={{opacity: 0, transition: {duration: 0.8}}}
+            {...props}
+        >
+            {children}
+        </motion.div>
+    )
+}

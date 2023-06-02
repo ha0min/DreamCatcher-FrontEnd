@@ -12,7 +12,7 @@ import {useDreamForm} from "@/utils/http";
 import {wait} from "next/dist/build/output/log";
 import {motion, useIsPresent} from "framer-motion";
 import Link from "next/link";
-import {EmojiCard, PrivacyScreen} from "@/components/common";
+import {DelayPopupDiv, EmojiCard, PrivacyScreen} from "@/components/common";
 import {LoadingModal} from "@/components/loading-modal";
 
 
@@ -42,12 +42,11 @@ const Dream = () => {
 
     return (
         <div>
-
             <PageContainerWrapper title={"Dream"}>
                 <DreamForm onFormFinish={onFormFinish}/>
             </PageContainerWrapper>
             <LoadingModal isModalShow={isMutating}>
-                <Loading />
+                <Loading/>
             </LoadingModal>
             <PrivacyScreen isPresent={isPresent}/>
         </div>
@@ -95,22 +94,12 @@ const EmotionStepForm = () => {
     const [customizeEmotion, setCustomizeEmotion] = useState(null);
     const inputRef = useRef(null);
     return (
-
         <ProCard
             style={{
                 minWidth: 800,
                 marginBlockEnd: 16,
             }}
-            title={
-                <div>
-                    <Typography.Title level={2}>
-                        👋 let{"'"}s build your dream step by step.
-                    </Typography.Title>
-                    <Typography.Title level={3}>
-                        First, what emotion best fit your dream?
-                    </Typography.Title>
-                </div>
-            }
+            title={""}
         >
             <ProFormItem
                 name="dream-emotion"
@@ -236,13 +225,7 @@ const EventStepForm = () => {
                 marginBlockEnd: 16,
                 maxWidth: '100%',
             }}
-            title={
-                <div>
-                    <Typography.Title level={2}>
-                        😎Got it.
-                    </Typography.Title>
-                </div>
-            }
+            title={""}
         >
             <ProFormList
                 name="fragments"
@@ -362,9 +345,14 @@ const EventStepForm = () => {
 }
 
 const DreamForm = ({onFormFinish}) => {
+    const [current, setCurrent] = useState(0)
     return (
         <>
             <StepsForm
+                onCurrentChange={(current) => setCurrent(current)}
+                stepsRender={(dom, submitter) => {
+                    return <div/>
+                }}
                 onFinish={onFormFinish}
                 formProps={{
                     validateMessages: {
@@ -376,11 +364,42 @@ const DreamForm = ({onFormFinish}) => {
                     name="emotion-form"
                     title="Fist step"
                 >
-                    <EmotionStepForm/>
+                        <DelayPopupDiv
+                            delay={0.5}
+                        >
+                            <Typography.Title level={2}>
+                                👋 Let{"'"}s build your dream step by step.
+                            </Typography.Title>
+                        </DelayPopupDiv>
+                        <DelayPopupDiv
+                            delay={1.5}
+                        >
+                            <Typography.Title level={3}>
+                                First, what emotion best fit your dream?
+                            </Typography.Title>
+                        </DelayPopupDiv>
+                        <DelayPopupDiv
+                            delay={1.6}
+                        >
+                            <EmotionStepForm/>
+                        </DelayPopupDiv>
                 </StepsForm.StepForm>
 
                 <StepsForm.StepForm name="event-form" title="Event">
-                    <EventStepForm/>
+                        <DelayPopupDiv
+                            delay={0.5}
+                            style={{opacity: current === 1 ? 1 : 0}}
+                        >
+                            <Typography.Title level={2}>
+                                😎Got it.
+                            </Typography.Title>
+                        </DelayPopupDiv>
+                        <DelayPopupDiv
+                            delay={1.5}
+                            style={{opacity: current === 1 ? 1 : 0}}
+                        >
+                            <EventStepForm/>
+                        </DelayPopupDiv>
                 </StepsForm.StepForm>
 
             </StepsForm>
