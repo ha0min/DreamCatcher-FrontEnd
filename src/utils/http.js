@@ -1,4 +1,5 @@
 import useSWRMutation from "swr/mutation";
+import useSWR from "swr";
 
 
 export const useDreamForm = () => {
@@ -38,4 +39,16 @@ const sendFormRequest = async (url, args) => {
             return text.length === 0 ? null : JSON.parse(text);
         }
     )
+}
+
+const fetcher = url => fetch(url).then(res => res.json());
+
+export const useQuestions = (dream_id) => {
+    const { data, error } = useSWR(`http://127.0.0.1:5000/questions/${dream_id}`, fetcher);
+
+    return {
+        questions: data,
+        isLoading: !error && !data,
+        isError: error
+    }
 }

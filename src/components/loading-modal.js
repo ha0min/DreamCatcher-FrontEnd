@@ -1,7 +1,7 @@
 import {motion} from "framer-motion";
 import {Carousel, Typography} from "antd";
 
-export const LoadingModal = ({isModalShow}) => {
+export const LoadingModal = ({isModalShow, children}) => {
     const itemVariants = {
         open: {
             opacity: 1,
@@ -43,37 +43,7 @@ export const LoadingModal = ({isModalShow}) => {
                 style={{pointerEvents: isModalShow ? "auto" : "none"}}
             >
                 <motion.div variants={itemVariants}>
-                    <Carousel dotPosition={"left"}
-                              dots={false}
-                              autoplaySpeed={3500}
-                              waitForAnimate={true}
-                              autoplay={true}>
-                        <div>
-                            <Typography.Title level={1} style={{color:"#f5f5f5"}}>
-                                🧠 Scanning your dream...
-                            </Typography.Title>
-                        </div>
-                        <div>
-                            <Typography.Title level={1} style={{color:"#f5f5f5"}}>
-                                🧪 Analyzing your dream fragments...
-                            </Typography.Title>
-                        </div>
-                        <div>
-                            <Typography.Title level={1} style={{color:"#f5f5f5"}}>
-                                🌌 Reconstructing your dream scene...
-                            </Typography.Title>
-                        </div>
-                        <div>
-                            <Typography.Title level={1} style={{color:"#f5f5f5"}}>
-                                🌠 Capturing the essence of your desires...
-                            </Typography.Title>
-                        </div>
-                        <div>
-                            <Typography.Title level={1} style={{color:"#f5f5f5"}}>
-                                🌙 Unleashing infinite possibilities...
-                            </Typography.Title>
-                        </div>
-                    </Carousel>
+                    {children}
                 </motion.div>
             </motion.div>
         </motion.div>

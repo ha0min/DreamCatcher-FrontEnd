@@ -6,13 +6,13 @@ import {
     StepsForm,
     ProFormDateRangePicker, CheckCard, ProFormItem, ProFormGroup, ProFormList, ProFormTextArea
 } from "@ant-design/pro-components";
-import {Col, Input, Row, Spin, Typography} from "antd";
+import {Carousel, Col, Input, Row, Spin, Typography} from "antd";
 import {useRef, useState} from "react";
 import {useDreamForm} from "@/utils/http";
 import {wait} from "next/dist/build/output/log";
 import {motion, useIsPresent} from "framer-motion";
 import Link from "next/link";
-import {EmojiCard} from "@/components/common";
+import {EmojiCard, PrivacyScreen} from "@/components/common";
 import {LoadingModal} from "@/components/loading-modal";
 
 
@@ -33,7 +33,7 @@ const Dream = () => {
         await dreamFormTrigger({formData})
             .then((res) => {
                 console.log(res);
-                router.push('/');
+                router.push('/questions/' + id);
             })
             .catch((err) => {
                 console.log(err);
@@ -46,16 +46,48 @@ const Dream = () => {
             <PageContainerWrapper title={"Dream"}>
                 <DreamForm onFormFinish={onFormFinish}/>
             </PageContainerWrapper>
-            <LoadingModal isModalShow={isMutating}/>
-            <motion.div
-                initial={{scaleX: 1}}
-                animate={{scaleX: 0, transition: {duration: 0.5, ease: "circOut"}}}
-                exit={{scaleX: 1, transition: {duration: 0.5, ease: "circIn"}}}
-                style={{originX: isPresent ? 0 : 1}}
-                className="privacy-screen"
-            />
+            <LoadingModal isModalShow={isMutating}>
+                <Loading />
+            </LoadingModal>
+            <PrivacyScreen isPresent={isPresent}/>
         </div>
 
+    )
+}
+
+const Loading = () => {
+    return (
+        <Carousel dotPosition={"left"}
+                  dots={false}
+                  autoplaySpeed={3500}
+                  waitForAnimate={true}
+                  autoplay={true}>
+            <div>
+                <Typography.Title level={1} style={{color: "#f5f5f5"}}>
+                    🧠 Scanning your dream...
+                </Typography.Title>
+            </div>
+            <div>
+                <Typography.Title level={1} style={{color: "#f5f5f5"}}>
+                    🧪 Analyzing your dream fragments...
+                </Typography.Title>
+            </div>
+            <div>
+                <Typography.Title level={1} style={{color: "#f5f5f5"}}>
+                    🌌 Reconstructing your dream scene...
+                </Typography.Title>
+            </div>
+            <div>
+                <Typography.Title level={1} style={{color: "#f5f5f5"}}>
+                    🌠 Capturing the essence of your desires...
+                </Typography.Title>
+            </div>
+            <div>
+                <Typography.Title level={1} style={{color: "#f5f5f5"}}>
+                    🌙 Unleashing infinite possibilities...
+                </Typography.Title>
+            </div>
+        </Carousel>
     )
 }
 

@@ -4,6 +4,7 @@ import {motion, useIsPresent} from "framer-motion";
 import {useRouter} from "next/router";
 import Link from "next/link";
 import {useEffect} from "react";
+import {PrivacyScreen} from "@/components/common";
 
 export const Welcome = () => {
     const router = useRouter();
@@ -39,11 +40,6 @@ export const Welcome = () => {
 
                 }}
             >
-                {/*<div*/}
-                {/*    className="absolute before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]"*/}
-                {/*>*/}
-                {/*</div>*/}
-
                 <div style={{overflow: "hidden", zIndex: -1}}>
                     <div
                         className="absolute animate-move-light dark:animate-move-dark before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]"
@@ -58,18 +54,17 @@ export const Welcome = () => {
                     <Button onClick={onButtonClick} type="default" style={{color: "#5596f7"}} size={"large"}>Get
                         Started</Button>
                 </div>
+                <p>
+                    <Link href={"/test"}>
+                        test
+                    </Link>
+                </p>
                 <Link href={"/dream/test"}>
-                    test
+                    test dream
                 </Link>
             </div>
 
-            <motion.div
-                initial={{ scaleX: 1 }}
-                animate={{ scaleX: 0, transition: { duration: 0.5, ease: "circOut" } }}
-                exit={{ scaleX: 1, transition: { duration: 0.5, ease: "circIn" } }}
-                style={{ originX: isPresent ? 0 : 1 }}
-                className="privacy-screen"
-            />
+            <PrivacyScreen isPresent={isPresent}/>
         </div>
     )
 }

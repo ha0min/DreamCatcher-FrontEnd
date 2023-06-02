@@ -1,4 +1,5 @@
 import {CheckCard} from "@ant-design/pro-components";
+import {motion} from "framer-motion";
 
 export const EmojiCard = ({emoji, description, value}) => {
     return (
@@ -17,6 +18,18 @@ export const EmojiCard = ({emoji, description, value}) => {
             description={<div style={{textAlign: 'center'}}>{description}</div>}
             value={value}
             style={{width: 120, height: 130, textAlign: 'center'}}
+        />
+    )
+}
+
+export const PrivacyScreen = ({isPresent}) => {
+    return (
+        <motion.div
+            initial={{scaleX: 1}}
+            animate={{scaleX: 0, transition: {duration: 0.5, ease: "circOut"}}}
+            exit={{scaleX: 1, transition: {duration: 0.5, ease: "circIn"}}}
+            style={{originX: isPresent ? 0 : 1}}
+            className="privacy-screen"
         />
     )
 }
