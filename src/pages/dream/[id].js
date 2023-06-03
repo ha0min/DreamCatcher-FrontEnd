@@ -9,9 +9,7 @@ import {
 import {Carousel, Col, Input, Row, Spin, Typography} from "antd";
 import {useRef, useState} from "react";
 import {useDreamForm} from "@/utils/http";
-import {wait} from "next/dist/build/output/log";
 import {motion, useIsPresent} from "framer-motion";
-import Link from "next/link";
 import {DelayPopupDiv, EmojiCard, PrivacyScreen} from "@/components/common";
 import {LoadingModal} from "@/components/loading-modal";
 

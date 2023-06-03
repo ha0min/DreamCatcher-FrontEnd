@@ -41,9 +41,13 @@ const sendFormRequest = async (url, args) => {
     )
 }
 
-const fetcher = url => fetch(url).then(res => res.json());
+const fetcher = (url) => {
+    console.log('fetcher url:', url);
+    return fetch(url).then((res) => res.json());
+};
 
 export const useQuestions = (dream_id) => {
+    console.log('useQuestions dream_id:', dream_id)
     const { data, error } = useSWR(`http://127.0.0.1:5000/questions/${dream_id}`, fetcher);
 
     return {
