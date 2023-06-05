@@ -1,10 +1,10 @@
 import {useIsPresent} from "framer-motion";
-import {useQuestions} from "@/utils/http";
+import {useDreamForm, useQuestions} from "@/utils/http";
 import PageContainerWrapper from "@/components/container";
-import {Card, Progress, Skeleton, Typography} from "antd";
+import {Button, Card, Carousel, Progress, Skeleton, Typography} from "antd";
 import {LoadingModal} from "@/components/loading-modal";
 import {PrivacyScreen} from "@/components/common";
-import {ProFormItem, ProFormTextArea, StepsForm} from "@ant-design/pro-components";
+import {ProFormItem, ProFormTextArea,ProForm, StepsForm} from "@ant-design/pro-components";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 
@@ -14,8 +14,9 @@ const QuestionsPage = () => {
     const router = useRouter();
     const {id} = router.query;
     const [isModalShow, setIsModalShow] = useState(false);
-    const [questionsData, setQuestionsData] = useState({ questions: null, isLoading: true, isError: null });
-    // const {questions, isError, isLoading} = useQuestions(dreamId);
+    const [questionsData, setQuestionsData] = useState({questions: null, isLoading: true, isError: null});
+    const {isMutating, error, data, reset, questionsTrigger} = useQuestions();
+
 
     useEffect(() => {
         // 在组件装载后立即显示 Modal，这样可以保证动画效果
@@ -29,13 +30,13 @@ const QuestionsPage = () => {
                 const dreamId = router.query.id;
                 console.log('dreamId', dreamId)
                 if (router.isReady) {
-                    setQuestionsData({ ...questionsData, isLoading: true });
+                    setQuestionsData({...questionsData, isLoading: true});
                     try {
                         const response = await fetch(`http://127.0.0.1:5000/questions/${dreamId}`);
                         const data = await response.json();
-                        setQuestionsData({ questions: data, isLoading: false, isError: null });
+                        setQuestionsData({questions: data, isLoading: false, isError: null});
                     } catch (error) {
-                        setQuestionsData({ ...questionsData, isLoading: false, isError: error });
+                        setQuestionsData({...questionsData, isLoading: false, isError: error});
                     }
                 }
             };
@@ -47,6 +48,19 @@ const QuestionsPage = () => {
         return () => clearTimeout(timerId);
     }, []);
 
+    const onFormFinish = async (formData) => {
+        formData.dream_id = id;
+        console.log('post data: ', formData);
+
+        await questionsTrigger({formData})
+            .then((res) => {
+                console.log(res);
+                // router.push('/questions/' + id);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }
 
 
     if (questionsData.isError) {
@@ -58,7 +72,7 @@ const QuestionsPage = () => {
         <div>
             <PageContainerWrapper>
                 <Skeleton loading={questionsData.isLoading} active>
-                    <QuestionsForm questions={questionsData.questions}/>
+                    <QuestionsForm onFormFinish={onFormFinish} questions={questionsData.questions}/>
                 </Skeleton>
             </PageContainerWrapper>
 
@@ -69,27 +83,104 @@ const QuestionsPage = () => {
                     </Typography.Title>
                 </div>
             </LoadingModal>
+
+            <LoadingModal isModalShow={isMutating}>
+                <Loading/>
+            </LoadingModal>
             <PrivacyScreen isPresent={isPresent}/>
         </div>
     )
 }
 
-const QuestionsForm = ({questions}) => {
+const Loading = () => {
+    return (
+        <Carousel dotPosition={"left"}
+                  dots={false}
+                  autoplaySpeed={3500}
+                  autoplay={true}>
+            <div>
+                <Typography.Title level={1} style={{color: "#f5f5f5"}}>
+                    🧠 Scanning your dream...
+                </Typography.Title>
+            </div>
+            <div>
+                <Typography.Title level={1} style={{color: "#f5f5f5"}}>
+                    🧪 Analyzing your dream fragments...
+                </Typography.Title>
+            </div>
+            <div>
+                <Typography.Title level={1} style={{color: "#f5f5f5"}}>
+                    🌌 Reconstructing your dream scene...
+                </Typography.Title>
+            </div>
+            <div>
+                <Typography.Title level={1} style={{color: "#f5f5f5"}}>
+                    🌠 Capturing the essence of your desires...
+                </Typography.Title>
+            </div>
+            <div>
+                <Typography.Title level={1} style={{color: "#f5f5f5"}}>
+                    🌙 Unleashing infinite possibilities...
+                </Typography.Title>
+            </div>
+        </Carousel>
+    )
+}
+
+const QuestionsForm = ({onFormFinish, questions}) => {
     const data = questions
 
     const [current, setCurrent] = useState(0);
     return (
         <div>
             <StepsForm
-                onFinish={true}
+                onFinish={onFormFinish}
+                submitter={{
+                    render: (props) => {
+                        if (props.step == 0) {
+                            return (
+                                <Button type="primary" onClick={() => props.onSubmit?.()}>
+                                    NEXT {'>'}
+                                </Button>
+                            );
+                        }
+
+                        if (props.step !== data.length - 1) {
+                            return [
+                                <Button key="goToPrev" onClick={() => props.onPre?.()}>
+                                    {'<'} Previous
+                                </Button>,
+                                <Button
+                                    type="primary"
+                                    key="goToNext"
+                                    onClick={() => props.onSubmit?.()}
+                                >
+                                    NEXT {'>'}
+                                </Button>,
+                            ]
+                        }
+
+
+                        return [
+                            <Button key="goToOne" onClick={() => props.onPre?.()}>
+                                {'<'} Previous
+                            </Button>,
+                            <Button
+                                type="primary"
+                                key="submit"
+                                onClick={() => props.onSubmit?.()}
+                            >
+                                Submit
+                            </Button>,
+                        ];
+
+                    }
+                }}
                 onCurrentChange={(current) => {
-                    console.log('current', current)
                     setCurrent(current)
                 }
                 }
                 stepsRender={(steps, doms) => {
-                    console.log('steps', steps)
-                    console.log('doms', doms)
                     return (
                         <Progress percent={((current + 1) / steps.length) * 100} showInfo={false}/>
                     )
@@ -100,16 +191,16 @@ const QuestionsForm = ({questions}) => {
                     },
                 }}
             >
-                {data.map((question, index) => {
-                    return (
-                        <StepsForm.StepForm name={'1' + question.question_id} key={index} title={"1"}
-                                            style={{width: "80vw"}}
-                        >
-                            <QuestionStep key={index} question={question}/>
-                        </StepsForm.StepForm>
+                    {data.map((question, index) => {
+                        return (
+                            <StepsForm.StepForm name={'1' + question.question_id} key={index} title={"1"}
+                                                style={{width: "80vw"}}
+                            >
+                                <QuestionStep key={index} question={question}/>
+                            </StepsForm.StepForm>
 
-                    )
-                })}
+                        )
+                    })}
             </StepsForm>
         </div>
     )

@@ -48,11 +48,50 @@ const fetcher = (url) => {
 
 export const useQuestions = (dream_id) => {
     console.log('useQuestions dream_id:', dream_id)
-    const { data, error } = useSWR(`http://127.0.0.1:5000/questions/${dream_id}`, fetcher);
+
+    const {data, isMutating, trigger, error, reset} = useSWRMutation(
+        `http://127.0.0.1:5000/answers/`,
+        sendAnswerRequest
+    );
 
     return {
-        questions: data,
-        isLoading: !error && !data,
-        isError: error
+        data,
+        isMutating,
+        error,
+        reset,
+        questionsTrigger: trigger,
     }
 }
+
+const sendAnswerRequest = async (url, args) => {
+    console.log('sendFormRequest args:', args.arg)
+    const formData = args.arg.formData
+    const outputData = Object.entries(formData).reduce((acc, [key, value]) => {
+        if (key !== 'dream_id') {
+            acc.answers.push({ [key]: value });
+        } else {
+            acc[key] = value;
+        }
+        return acc;
+    }, { answers: [] });
+    console.log('sendFormRequest dest:', url + outputData?.dream_id);
+    console.log('sendFormRequest form data:', outputData)
+    console.log('sendFormRequest form data:', JSON.stringify(outputData))
+
+    return fetch(url + outputData?.dream_id, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(outputData),
+    }).then(async (res) => {
+            if (!res.ok) {
+                throw Error('Error');
+            }
+            const text = await res.text();
+            // 如果响应内容为空字符串，返回null；否则尝试解析JSON
+            return text.length === 0 ? null : JSON.parse(text);
+        }
+    )
+}
+

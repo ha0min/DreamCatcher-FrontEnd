@@ -6,7 +6,7 @@ import {
     StepsForm,
     ProFormDateRangePicker, CheckCard, ProFormItem, ProFormGroup, ProFormList, ProFormTextArea
 } from "@ant-design/pro-components";
-import {Carousel, Col, Input, Row, Spin, Typography} from "antd";
+import {Button, Carousel, Col, Input, Row, Spin, Typography} from "antd";
 import {useRef, useState} from "react";
 import {useDreamForm} from "@/utils/http";
 import {motion, useIsPresent} from "framer-motion";
@@ -57,7 +57,6 @@ const Loading = () => {
         <Carousel dotPosition={"left"}
                   dots={false}
                   autoplaySpeed={3500}
-                  waitForAnimate={true}
                   autoplay={true}>
             <div>
                 <Typography.Title level={1} style={{color: "#f5f5f5"}}>
@@ -275,11 +274,9 @@ const EventStepForm = () => {
                         <EmojiCard description={"Office"} emoji={"💼"} value={"Work"}/>
                         <EmojiCard description={"Beach"} emoji={"🏖️"} value={"Beach"}/>
                         <EmojiCard description={"Garden"} emoji={"🌷"} value={"Garden"}/>
-                        <EmojiCard description={"Space"} emoji={"🌌"} value={"Space"}/>
                         <EmojiCard description={"Mall"} emoji={"🛍"} value={"Mall"}/>
                         <EmojiCard description={"City"} emoji={"🏙️"} value={"City"}/>
                         <EmojiCard description={"Mountain"} emoji={"🏔️"} value={"Mountain"}/>
-                        <EmojiCard description={"Desert"} emoji={"🏜️"} value={"Desert"}/>
                         <EmojiCard description={"Unknown"} emoji={"🌫"} value={"Unknown"}/>
                         <CheckCard
                             title={
@@ -347,6 +344,31 @@ const DreamForm = ({onFormFinish}) => {
     return (
         <>
             <StepsForm
+                submitter={{
+                    render: (props) => {
+                        if (props.step === 0) {
+                            return (
+                                <Button type="primary" onClick={() => props.onSubmit?.()}>
+                                    NEXT {'>'}
+                                </Button>
+                            );
+                        }
+
+                        return [
+                            <Button key="goToOne" onClick={() => props.onPre?.()}>
+                                {'<'} Previous
+                            </Button>,
+                            <Button
+                                type="primary"
+                                key="submit"
+                                onClick={() => props.onSubmit?.()}
+                            >
+                                Submit
+                            </Button>,
+                        ];
+
+                    }
+                }}
                 onCurrentChange={(current) => setCurrent(current)}
                 stepsRender={(dom, submitter) => {
                     return <div/>
@@ -362,42 +384,42 @@ const DreamForm = ({onFormFinish}) => {
                     name="emotion-form"
                     title="Fist step"
                 >
-                        <DelayPopupDiv
-                            delay={0.5}
-                        >
-                            <Typography.Title level={2}>
-                                👋 Let{"'"}s build your dream step by step.
-                            </Typography.Title>
-                        </DelayPopupDiv>
-                        <DelayPopupDiv
-                            delay={1.5}
-                        >
-                            <Typography.Title level={3}>
-                                First, what emotion best fit your dream?
-                            </Typography.Title>
-                        </DelayPopupDiv>
-                        <DelayPopupDiv
-                            delay={1.6}
-                        >
-                            <EmotionStepForm/>
-                        </DelayPopupDiv>
+                    <DelayPopupDiv
+                        delay={0.5}
+                    >
+                        <Typography.Title level={2}>
+                            👋 Let{"'"}s build your dream step by step.
+                        </Typography.Title>
+                    </DelayPopupDiv>
+                    <DelayPopupDiv
+                        delay={1.5}
+                    >
+                        <Typography.Title level={3}>
+                            First, what emotion best fit your dream?
+                        </Typography.Title>
+                    </DelayPopupDiv>
+                    <DelayPopupDiv
+                        delay={1.6}
+                    >
+                        <EmotionStepForm/>
+                    </DelayPopupDiv>
                 </StepsForm.StepForm>
 
                 <StepsForm.StepForm name="event-form" title="Event">
-                        <DelayPopupDiv
-                            delay={0.5}
-                            style={{opacity: current === 1 ? 1 : 0}}
-                        >
-                            <Typography.Title level={2}>
-                                😎Got it.
-                            </Typography.Title>
-                        </DelayPopupDiv>
-                        <DelayPopupDiv
-                            delay={1.5}
-                            style={{opacity: current === 1 ? 1 : 0}}
-                        >
-                            <EventStepForm/>
-                        </DelayPopupDiv>
+                    <DelayPopupDiv
+                        delay={0.5}
+                        style={{opacity: current === 1 ? 1 : 0}}
+                    >
+                        <Typography.Title level={2}>
+                            😎Got it.
+                        </Typography.Title>
+                    </DelayPopupDiv>
+                    <DelayPopupDiv
+                        delay={1.5}
+                        style={{opacity: current === 1 ? 1 : 0}}
+                    >
+                        <EventStepForm/>
+                    </DelayPopupDiv>
                 </StepsForm.StepForm>
 
             </StepsForm>
