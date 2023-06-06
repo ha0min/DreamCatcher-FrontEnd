@@ -87,6 +87,60 @@ const Loading = () => {
     )
 }
 
+const ProtagonistStepForm = () => {
+    const [customizeEmotion, setCustomizeEmotion] = useState(null);
+    const inputRef = useRef(null);
+
+    return (
+        <ProCard
+            style={{
+                minWidth: 800,
+                marginBlockEnd: 16,
+            }}
+            title={""}
+        >
+            <ProFormItem
+                name="protagonist"
+                rules={[{required: true}]}
+            >
+                <CheckCard.Group>
+                    <EmojiCard description={"Man"} emoji={"👨"} value={"Man"}/>
+                    <EmojiCard description={"Person"} emoji={"👤"} value={"Person"}/>
+                    <EmojiCard description={"Woman"} emoji={"👩"} value={"Woman"}/>
+                    <EmojiCard description={"Dog"} emoji={"🐶"} value={"Dog"}/>
+                    <CheckCard
+                        title={
+                            <div
+                                style={{
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    width: '100px',
+                                    fontSize: '3em'
+                                }}
+                            >
+                                🌟
+                            </div>
+                        }
+                        description={
+                            <Input
+                                ref={inputRef}
+                                name={'protagonist'}
+                                placeholder={'customize'}
+                                onChange={(e) => {
+                                    console.log(e.target.value)
+                                    setCustomizeEmotion(e.target.value)
+                                }}
+                            />
+                        }
+                        value={customizeEmotion}
+                        style={{width: 120, height: 130, textAlign: 'center'}}
+                    />
+                </CheckCard.Group>
+
+            </ProFormItem>
+        </ProCard>
+    )
+}
+
 const EmotionStepForm = () => {
     const [customizeEmotion, setCustomizeEmotion] = useState(null);
     const inputRef = useRef(null);
@@ -395,14 +449,27 @@ const DreamForm = ({onFormFinish}) => {
                         delay={1.5}
                     >
                         <Typography.Title level={3}>
-                            First, what emotion best fit your dream?
+                            First, what is the protagonist of your dream?
                         </Typography.Title>
                     </DelayPopupDiv>
                     <DelayPopupDiv
                         delay={1.6}
                     >
+                        <ProtagonistStepForm/>
+                    </DelayPopupDiv>
+                    <DelayPopupDiv
+                        delay={3.5}
+                    >
+                        <Typography.Title level={3}>
+                            What emotion did you feel in this dream?
+                        </Typography.Title>
+                    </DelayPopupDiv>
+                    <DelayPopupDiv
+                        delay={3.9}
+                    >
                         <EmotionStepForm/>
                     </DelayPopupDiv>
+
                 </StepsForm.StepForm>
 
                 <StepsForm.StepForm name="event-form" title="Event">
