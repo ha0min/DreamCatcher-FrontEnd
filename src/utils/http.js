@@ -4,7 +4,7 @@ import useSWR from "swr";
 
 export const useDreamForm = () => {
     const {data, isMutating, trigger, error, reset} = useSWRMutation(
-        `http://127.0.0.1:5000/form/`,
+        `http://103.251.89.102:5000/form/`,
         sendFormRequest
     );
 
@@ -50,7 +50,7 @@ export const useQuestions = (dream_id) => {
     console.log('useQuestions dream_id:', dream_id)
 
     const {data, isMutating, trigger, error, reset} = useSWRMutation(
-        `http://127.0.0.1:5000/answers/`,
+        `http://103.251.89.102:5000/answers/`,
         sendAnswerRequest
     );
 
