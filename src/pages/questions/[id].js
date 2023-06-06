@@ -55,7 +55,7 @@ const QuestionsPage = () => {
         await questionsTrigger({formData})
             .then((res) => {
                 console.log(res);
-                // router.push('/questions/' + id);
+                router.push('/text/' + id);
             })
             .catch((err) => {
                 console.log(err);
