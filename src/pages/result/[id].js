@@ -62,7 +62,7 @@ export default function Home() {
         await nameTrigger({formData})
             .then((res) => {
                 console.log(res);
-                // router.push('/gallery');
+                router.push('/gallery');
             })
             .catch((err) => {
                 console.log(err);
