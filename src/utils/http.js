@@ -80,6 +80,23 @@ export const useText = (dream_id) => {
     }
 }
 
+export const useName = (dream_id) => {
+    console.log('useText dream_id:', dream_id)
+
+    const {data, isMutating, trigger, error, reset} = useSWRMutation(
+        `http://127.0.0.1:5000/name/`,
+        sendAnswerRequest
+    );
+
+    return {
+        data,
+        isMutating,
+        error,
+        reset,
+        nameTrigger: trigger,
+    }
+}
+
 const sendAnswerRequest = async (url, args) => {
     console.log('sendFormRequest args:', args.arg)
     const formData = args.arg.formData
