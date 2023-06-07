@@ -1,7 +1,7 @@
 // pages/index.js
 import {motion, useIsPresent} from 'framer-motion';
 import {DelayPopupDiv, PrivacyScreen} from "@/components/common";
-import {useQuestions} from "@/utils/http";
+import {useQuestions, useText} from "@/utils/http";
 import {LoadingModal} from "@/components/loading-modal";
 import {useEffect, useState} from "react";
 import {Button, Card, Carousel, Input, Progress, Skeleton, Typography} from "antd";
@@ -17,6 +17,8 @@ export default function Home() {
 
     const {id} = router.query;
     // const id = 'test';
+    const {textTrigger, isMutating} = useText(id);
+
 
     useEffect(() => {
         // 在组件装载后立即显示 Modal，这样可以保证动画效果
@@ -33,7 +35,7 @@ export default function Home() {
                 if (router.isReady) {
                     setTextData({...textData, isLoading: true});
                     try {
-                        const response = await fetch(`http://103.251.89.102:5000/text/${dreamId}`);
+                        const response = await fetch(`http://127.0.0.1:5000/text/${dreamId}`);
                         const data = await response.json();
                         setTextData({text: data, isLoading: false, isError: null});
                     } catch (error) {
@@ -54,17 +56,18 @@ export default function Home() {
     }
 
     const onFormFinish = async (formData) => {
+        console.log('text post click')
         formData.dream_id = id;
         console.log('post data: ', formData);
 
-        // await questionsTrigger({formData})
-        //     .then((res) => {
-        //         console.log(res);
-        //         // router.push('/questions/' + id);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     })
+        await textTrigger({formData})
+            .then((res) => {
+                console.log(res);
+                // router.push('/questions/' + id);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     }
 
 
@@ -74,14 +77,14 @@ export default function Home() {
                 <Skeleton loading={textData.isLoading} active>
                     <DelayPopupDiv delay={0.5}>
                         <Typography.Title level={1}>
-                            🎉 Your dream is ready!
+                            🥸 Your dream is generated!
                         </Typography.Title>
                     </DelayPopupDiv>
                     <TextForm onFormFinish={onFormFinish} text={textData.text}/>
                 </Skeleton>
             </PageContainerWrapper>
 
-            <LoadingModal isModalShow={false}>
+            <LoadingModal isModalShow={isMutating}>
                 <Loading/>
             </LoadingModal>
             <PrivacyScreen isPresent={isPresent}/>
@@ -131,28 +134,18 @@ const TextForm = ({onFormFinish, text}) => {
         <div>
             <ProForm
                 onFinish={onFormFinish}
-                submitter={{
-                    render: (props) => {
-                        return [
-                            <Button key="goToOne" onClick={() => props.onReset?.()}>
-                                Reset
-                            </Button>,
-                            <Button
-                                type="primary"
-                                key="submit"
-                                onClick={() => props.onSubmit?.()}
-                            >
-                                Submit
-                            </Button>,
-                        ];
-
-                    }
-                }}
+                submitter={
+                    {
+                        searchConfig: {
+                            resetText: 'Reset',
+                            submitText: 'Submit',
+                        },
+                    }}
 
             >
                 {data.map((text, index) => {
                     return (
-                        <DelayPopupDiv key={index} delay={3 + 0.2 * index}>
+                        <DelayPopupDiv key={index} delay={1.3 + 0.2 * index}>
                             <TextFormItem index={index} text={text}/>
                         </DelayPopupDiv>
                     )
@@ -164,20 +157,28 @@ const TextForm = ({onFormFinish, text}) => {
 
 const TextFormItem = ({index, text}) => {
     return (
-        <ProFormItem
+        // <ProFormItem
+        //     name={'item'+index}
+        //     label={
+        //         <Typography.Title level={3}>
+        //             Scene {index + 1}
+        //         </Typography.Title>
+        //     }
+        // >
+        //     <Input.TextArea key={index} rows={4} value={text.text}/>
+        // </ProFormItem>
+        //
+        <ProFormTextArea
             name={index}
             label={
                 <Typography.Title level={3}>
                     Scene {index + 1}
                 </Typography.Title>
             }
-            rules={[
-                {
-                    required: true,
-                }
-            ]}
+            key={index}
+            initialValue={text.text}
         >
-            <Input.TextArea rows={4} defaultValue={text.text}/>
-        </ProFormItem>
+
+        </ProFormTextArea>
     )
 }
