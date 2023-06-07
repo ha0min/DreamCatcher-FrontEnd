@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.1.4",
     "@ant-design/pro-components": "^2.5.1",
     "antd": "^5.5.1",
     "autoprefixer": "10.4.14",

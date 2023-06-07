@@ -94,19 +94,25 @@ export default function Home() {
             </PageContainerWrapper>
 
             <LoadingModal isModalShow={isDialogShow}>
+                <div
+                    style={{
+                        width: '700px'
+                    }}
+                >
+                    <Row justify={'end'}>
+                        <Col>
+                            <Button
+                                shape={'circle'}
+                                type={'default'}
+                                onClick={() => setIsDialogShow(false)}
+                            >
+                                X
+                            </Button>
+                        </Col>
+                    </Row>
+                    <SubmitForm onFinish={onFormFinish}/>
+                </div>
 
-                <Row justify={'end'}>
-                    <Col>
-                        <Button
-                            shape={'circle'}
-                            type={'default'}
-                            onClick={() => setIsDialogShow(false)}
-                        >
-                            X
-                        </Button>
-                    </Col>
-                </Row>
-                <SubmitForm onFinish={onFormFinish}/>
             </LoadingModal>
             <PrivacyScreen isPresent={isPresent}/>
         </div>
@@ -131,6 +137,7 @@ const SubmitForm = ({onFinish}) => {
 
             <ProFormText
                 name={'name'}
+                width={'md'}
                 placeholder={'Name your dream'}
                 label={''}
             />
