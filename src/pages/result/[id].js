@@ -9,6 +9,8 @@ import ImageGallery from "@/components/image-gallery";
 import {useName} from "@/utils/http";
 import {ProForm, ProFormText} from "@ant-design/pro-components";
 
+const baseUrl = process.env.BACKEND_URL || 'http://127.0.0.1:5000';
+
 export default function Home() {
     const [isModalShow, setIsModalShow] = useState(false);
     const [isDialogShow, setIsDialogShow] = useState(false);
@@ -35,7 +37,7 @@ export default function Home() {
                 if (router.isReady) {
                     setImgData({...imgData, isLoading: true});
                     try {
-                        const response = await fetch(`http://127.0.0.1:5000/img/${dreamId}`);
+                        const response = await fetch(`${baseUrl}/img/${dreamId}`);
                         const data = await response.json();
                         setImgData({img: data, isLoading: false, isError: null});
                     } catch (error) {

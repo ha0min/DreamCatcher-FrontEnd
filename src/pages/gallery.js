@@ -8,6 +8,8 @@ import ImageGallery from "@/components/image-gallery";
 import {EyeOutlined} from "@ant-design/icons";
 import {LoadingModal} from "@/components/loading-modal";
 
+const baseUrl = process.env.BACKEND_URL || 'http://127.0.0.1:5000';
+
 export default function Home() {
     const [isModalShow, setIsModalShow] = useState(false);
     const [isDialogShow, setIsDialogShow] = useState(false);
@@ -28,7 +30,7 @@ export default function Home() {
         console.log('dreamId', dreamId)
         setImgData({...imgData, isLoading: true});
         try {
-            const response = await fetch(`http://127.0.0.1:5000/img/${dreamId}`);
+            const response = await fetch(`${baseUrl}/img/${dreamId}`);
             const data = await response.json();
             setImgData({img: data, isLoading: false, isError: null});
         } catch (error) {
@@ -52,7 +54,7 @@ export default function Home() {
                 if (router.isReady) {
                     setListData({...listData, isLoading: true});
                     try {
-                        const response = await fetch(`http://127.0.0.1:5000/finished`);
+                        const response = await fetch(`${baseUrl}/finished`);
                         const json = await response.json();
                         const data = json.finished;
                         setListData({data: data, isLoading: false, isError: null});

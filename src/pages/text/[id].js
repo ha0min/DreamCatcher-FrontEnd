@@ -35,7 +35,7 @@ export default function Home() {
                 if (router.isReady) {
                     setTextData({...textData, isLoading: true});
                     try {
-                        const response = await fetch(`http://127.0.0.1:5000/text/${dreamId}`);
+                        const response = await fetch(`${baseUrl}/text/${dreamId}`);
                         const data = await response.json();
                         setTextData({text: data, isLoading: false, isError: null});
                     } catch (error) {

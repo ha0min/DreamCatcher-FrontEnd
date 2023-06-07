@@ -1,10 +1,11 @@
 import useSWRMutation from "swr/mutation";
 import useSWR from "swr";
 
+const baseUrl = process.env.BACKEND_URL || 'http://127.0.0.1:5000';
 
 export const useDreamForm = () => {
     const {data, isMutating, trigger, error, reset} = useSWRMutation(
-        `http://127.0.0.1:5000/form/`,
+        `${baseUrl}/form/`,
         sendFormRequest
     );
 
@@ -50,7 +51,7 @@ export const useQuestions = (dream_id) => {
     console.log('useQuestions dream_id:', dream_id)
 
     const {data, isMutating, trigger, error, reset} = useSWRMutation(
-        `http://127.0.0.1:5000/answers/`,
+        `${baseUrl}/answers/`,
         sendAnswerRequest
     );
 
@@ -67,7 +68,7 @@ export const useText = (dream_id) => {
     console.log('useText dream_id:', dream_id)
 
     const {data, isMutating, trigger, error, reset} = useSWRMutation(
-        `http://127.0.0.1:5000/text/`,
+        `${baseUrl}/text/`,
         sendAnswerRequest
     );
 
@@ -84,7 +85,7 @@ export const useName = (dream_id) => {
     console.log('useText dream_id:', dream_id)
 
     const {data, isMutating, trigger, error, reset} = useSWRMutation(
-        `http://127.0.0.1:5000/name/`,
+        `${baseUrl}/name/`,
         sendAnswerRequest
     );
 
