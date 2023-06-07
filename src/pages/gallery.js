@@ -162,6 +162,7 @@ const DreamGalleryItem = ({name, summary, id, onClick}) => {
             hoverable
             actions={
                 [<Button
+                    key={'view'}
                     onClick={() => onClick(id, name)}
                     icon={<EyeOutlined/>}
                     type={"text"}
