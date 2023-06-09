@@ -8,7 +8,7 @@ import ImageGallery from "@/components/image-gallery";
 import {EyeOutlined} from "@ant-design/icons";
 import {LoadingModal} from "@/components/loading-modal";
 
-const baseUrl = process.env.BACKEND_URL || 'http://127.0.0.1:5000';
+const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:5000';
 
 export default function Home() {
     const [isModalShow, setIsModalShow] = useState(false);
@@ -114,7 +114,7 @@ export default function Home() {
                         </Col>
                     </Row>
                     <Typography.Title level={3}>{name}</Typography.Title>
-                    <ImageGallery data={imgData.img}/>
+                    <ImageGallery data={imgData.img} dreamId={id} showButtons={false}/>
                 </Skeleton>
             </Modal>
 

@@ -9,7 +9,7 @@ import ImageGallery from "@/components/image-gallery";
 import {useName} from "@/utils/http";
 import {ProForm, ProFormText} from "@ant-design/pro-components";
 
-const baseUrl = process.env.BACKEND_URL || 'http://127.0.0.1:5000';
+const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:5000';
 
 export default function Home() {
     const [isModalShow, setIsModalShow] = useState(false);
@@ -83,7 +83,7 @@ export default function Home() {
                     </DelayPopupDiv>
                     <DelayPopupDiv delay={1.5}>
 
-                        <ImageGallery data={imgData.img}/>
+                        <ImageGallery data={imgData.img} dreamId={id} showButtons={true}/>
 
                         <Button
                             type={'primary'}

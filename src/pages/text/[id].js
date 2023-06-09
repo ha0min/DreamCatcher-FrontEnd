@@ -9,6 +9,8 @@ import PageContainerWrapper from "@/components/container";
 import {StepsForm, ProForm, ProFormItem, ProFormTextArea} from "@ant-design/pro-components";
 import {useRouter} from "next/router";
 
+const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:5000';
+
 export default function Home() {
     const [isModalShow, setIsModalShow] = useState(false);
     const [textData, setTextData] = useState({text: null, isLoading: true, isError: null});
@@ -63,6 +65,7 @@ export default function Home() {
         await textTrigger({formData})
             .then((res) => {
                 console.log(res);
+                router.push('/result/' + id);
                 // router.push('/questions/' + id);
             })
             .catch((err) => {

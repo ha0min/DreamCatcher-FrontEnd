@@ -125,14 +125,14 @@ export const Welcome = () => {
                         router.push(`/gallery`);
                     }} type="default" style={{color: "#5596f7"}} size={"large"}>Gallery</Button>
                 </div>
-                <p>
-                    <Link href={"/test"}>
-                        test
-                    </Link>
-                </p>
-                <Link href={"/dream/test"}>
-                    test dream
-                </Link>
+                {/*<p>*/}
+                {/*    <Link href={"/test"}>*/}
+                {/*        test*/}
+                {/*    </Link>*/}
+                {/*</p>*/}
+                {/*<Link href={"/dream/test"}>*/}
+                {/*    test dream*/}
+                {/*</Link>*/}
             </div>
 
 

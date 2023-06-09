@@ -8,7 +8,7 @@ import {ProFormItem, ProFormTextArea,ProForm, StepsForm} from "@ant-design/pro-c
 import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 
-const baseUrl = process.env.BACKEND_URL || 'http://127.0.0.1:5000';
+const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:5000';
 
 const QuestionsPage = () => {
     const isPresent = useIsPresent();
@@ -56,7 +56,7 @@ const QuestionsPage = () => {
         await questionsTrigger({formData})
             .then((res) => {
                 console.log(res);
-                // router.push('/text/' + id);
+                router.push('/text/' + id);
             })
             .catch((err) => {
                 console.log(err);
